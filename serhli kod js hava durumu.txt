@@ -1,0 +1,31 @@
+const url='https://api.openweathermap.org/data/2.5/' // 
+const key='3115612fc12ef6c4f0cbee32f1e74cba' // 
+const setQuery=(e)=>{
+  if(e.keyCode =='13') // enter düyməsi basılanda getResult funksiyası işə düşür.
+    getResult(searchBar.value) // getResult funksiyasına inputun dəyəri parametr olaraq göndərilir.
+}
+const getResult=(cityName)=>{
+  let query=`${url}weather?q=${cityName}&appid=${key}&units=metric&lang=tr` // data üçün query hazırlanır.
+  fetch(query) // query-dən gələn datanı başa düşülən şəkilə gətirir.
+  .then(weather=>{
+    return weather.json() // datanı json faylına çevirir.
+  })
+  .then(displayResult) // displayResult funksiyasını işə salır.
+}
+const displayResult=(result)=>{
+  let city=document.querySelector('.city') 
+  city.innerText=`${result.name}, ${result.sys.country}` // city hissəsinə nəticədən gələn ad və ölkə tag-i yazılır.
+  
+  let temp=document.querySelector('.temp')
+  temp.innerText = `${Math.round(result.main.temp)} °C` // temperatur hissəsinə nəticədən gələn temperatur dəyəri yazılır.
+  
+  let desc=document.querySelector('.desc')
+  desc.innerText=result.weather[0].description
+  
+  let minmax=document.querySelector('.minmax') 
+  minmax.innerText=`${Math.round(result.main.temp_min)} °C /
+  ${Math.round(result.main.temp_max)} °C` // minimum və maksimum temperaturlar yazılır.
+}
+
+const searchBar = document.getElementById('searchBar')
+searchBar.addEventListener('keypress', setQuery) // input hissəsində hər hansı düymə basılsa setQuery funksiyası işə düşür.
